@@ -1,0 +1,9 @@
+{
+  "dbUrl":"mongodb://getgimphed:learning@ds143449.mlab.com:43449/chatdb",
+  "sessionSecret":"FacebookChat",
+  "fb":{
+    "appID" : "298821093854656",
+    "appSecret" : "eb1e78fbb724b271855853424d373697",
+    "callbackURL" : "http://localhost:8080/auth/facebook/callback"
+  }
+}

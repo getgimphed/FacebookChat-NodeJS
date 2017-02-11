@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
+    <title><%=title%></title>
+    <!-- <script type="text/javascript" src="css/style.css"></script> -->
+    <script type="text/javascript" src="./socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        var host = '<%=config.host%>';
+        var socket = io.connect(host+'/roomlist');
+        socket.on('connect',function(){
+          console.log("Client Connected");
+        });
+
+        socket.on('roomUpdate',function(data){
+          var procData = JSON.parse(data);
+          $('.roomlist').html('');
+          for(var i= 0;i<procData.length;i++){
+            var str ="<a href='room/" + procData[i].room_number + "'><li>" + procData[i].room_name + "</li></a>";
+            $('.roomlist').prepend(str);
+          }
+        });
+        $(document).on('click','#create',function(){
+          room_name = $('.newRoom').val();
+          if(room_name != ''){
+            var room_number = parseInt(Math.random()*10000);
+            socket.emit('newRoom',{room_name:room_name,room_number:room_number});
+            $('.newRoom').val('');
+          }
+        });
+      });
+    </script>
+  </head>
+  <body><br><br>
+    <div class="container">
+      <div class="col s6 push-s3">
+        <h4 class="col s12">Welcome to FacebookChat by Vedant Jain</h3>
+        <div class="row">
+          <div class="col s3"><img src="<%=user.profilePic%>" width="60" alt="Profile Pic"></div>
+          <div class="col s8">
+            Welcome <%= user.fullname %>. <a href="/logout">Logout</a>
+          </div>
+        </div>
+        <div class="row">
+          <input type="text" name="newRoom"  class="newRoom" value="">
+          <button id="create">Create New Chat Room</button>
+        </div>
+        <div class="row">
+          <ul class="roomlist">
+            <!-- <a href="#"><li></li></a> -->
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
